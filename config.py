@@ -1,24 +1,31 @@
+import json
 import os
 
-class Config:
-    def __init__(self):
-        self.default_click_interval = 0.05
-        self.click_count = 100
-        self.click_button = 'left'
-        self.auto_start = True
-        self.log_file = 'click_log.txt'
+DEFAULT_CONFIG = {
+    'click_interval': 0.1,
+    'clicks': 100,
+    'button': 'left',
+    'active_window': True
+}
 
-    def load_env_variables(self):
-        self.default_click_interval = float(os.getenv('CLICK_INTERVAL', self.default_click_interval))
-        self.click_count = int(os.getenv('CLICK_COUNT', self.click_count))
-        self.click_button = os.getenv('CLICK_BUTTON', self.click_button)
-        self.auto_start = os.getenv('AUTO_START', str(self.auto_start)).lower() == 'true'
+class ConfigLoader:
+    def __init__(self, config_file='config.json'):
+        self.config_file = config_file
+        self.config = DEFAULT_CONFIG.copy()
+        self.load_config()
 
-    def save_to_file(self):
-        with open(self.log_file, 'w') as f:
-            f.write(f'Click Interval: {self.default_click_interval}\n')
-            f.write(f'Click Count: {self.click_count}\n')
-            f.write(f'Click Button: {self.click_button}\n')
-            f.write(f'Auto Start: {self.auto_start}\n')
+    def load_config(self):
+        if os.path.exists(self.config_file):
+            with open(self.config_file, 'r') as f:
+                file_config = json.load(f)
+                self.config.update(file_config)
 
-config = Config()
+    def get(self, key):
+        return self.config.get(key, DEFAULT_CONFIG.get(key))
+
+    def set(self, key, value):
+        self.config[key] = value
+
+    def save(self):
+        with open(self.config_file, 'w') as f:
+            json.dump(self.config, f, indent=4)
