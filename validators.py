@@ -1,18 +1,20 @@
-import re
+def validate_click_interval(interval):
+    if not isinstance(interval, (int, float)):
+        raise ValueError('Interval must be a number')
+    if interval <= 0:
+        raise ValueError('Interval must be greater than zero')
 
-class InputValidationError(Exception):
-    pass
 
-def validate_input(user_input):
-    if not isinstance(user_input, str):
-        raise InputValidationError('Input must be a string')
-    if not re.match('^[a-zA-Z0-9_]+$', user_input):
-        raise InputValidationError('Input must be alphanumeric')
-    if len(user_input) < 3 or len(user_input) > 20:
-        raise InputValidationError('Input length must be between 3 and 20 characters')
+def validate_click_count(count):
+    if not isinstance(count, int):
+        raise ValueError('Click count must be an integer')
+    if count <= 0:
+        raise ValueError('Click count must be greater than zero')
 
-# Example usage within the main processing loop:
-# try:
-#     validate_input(user_input)
-# except InputValidationError as e:
-#     print(f'Input validation failed: {e}')
+
+def validate_coordinates(x, y):
+    if not (isinstance(x, int) and isinstance(y, int)):
+        raise ValueError('Coordinates must be integers')
+    if x < 0 or y < 0:
+        raise ValueError('Coordinates must be non-negative')
+
