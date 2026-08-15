@@ -1,20 +1,26 @@
-def validate_click_interval(interval):
-    if not isinstance(interval, (int, float)):
-        raise ValueError('Interval must be a number')
-    if interval <= 0:
-        raise ValueError('Interval must be greater than zero')
+import re
+
+def validate_email(email):
+    email_regex = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
+    return bool(re.match(email_regex, email))
 
 
-def validate_click_count(count):
-    if not isinstance(count, int):
-        raise ValueError('Click count must be an integer')
-    if count <= 0:
-        raise ValueError('Click count must be greater than zero')
+def validate_url(url):
+    url_regex = r'^(http|https)://[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}.*$'
+    return bool(re.match(url_regex, url))
 
 
-def validate_coordinates(x, y):
-    if not (isinstance(x, int) and isinstance(y, int)):
-        raise ValueError('Coordinates must be integers')
-    if x < 0 or y < 0:
-        raise ValueError('Coordinates must be non-negative')
+def validate_integer(value):
+    return isinstance(value, int) 
 
+
+def validate_float(value):
+    return isinstance(value, float) 
+
+
+def validate_positive_integer(value):
+    return validate_integer(value) and value > 0
+
+
+def validate_positive_float(value):
+    return validate_float(value) and value > 0.0
