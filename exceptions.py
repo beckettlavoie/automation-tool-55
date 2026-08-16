@@ -1,16 +1,14 @@
-class AutoClickerError(Exception):
+class ValidationError(Exception):
     pass
 
-class InvalidConfigurationError(AutoClickerError):
-    def __init__(self, message):
-        super().__init__(message)
+def validate_input(input_value):
+    if not isinstance(input_value, int) or input_value < 0:
+        raise ValidationError("Input must be a non-negative integer.")
 
-class ClickIntervalError(AutoClickerError):
-    def __init__(self, interval):
-        message = f'Invalid click interval: {interval}'
-        super().__init__(message)
 
-class ClickLimitExceededError(AutoClickerError):
-    def __init__(self, limit):
-        message = f'Click limit exceeded: {limit}'
-        super().__init__(message)
+def process_inputs(input_list):
+    for value in input_list:
+        validate_input(value)
+        # Proceed with processing the value
+        # Placeholder for actual processing logic
+        print(f"Processing: {value}")
