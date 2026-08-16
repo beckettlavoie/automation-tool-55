@@ -1,31 +1,25 @@
-import json
-import os
+from typing import Dict, Any
 
-DEFAULT_CONFIG = {
-    'click_interval': 0.1,
-    'clicks': 100,
-    'button': 'left',
-    'active_window': True
-}
+class Config:
+    def __init__(self, settings: Dict[str, Any]) -> None:
+        self.settings = settings
 
-class ConfigLoader:
-    def __init__(self, config_file='config.json'):
-        self.config_file = config_file
-        self.config = DEFAULT_CONFIG.copy()
-        self.load_config()
+    def get(self, key: str, default: Any = None) -> Any:
+        """Retrieve a setting by key, returning a default if not found."""
+        return self.settings.get(key, default)
 
-    def load_config(self):
-        if os.path.exists(self.config_file):
-            with open(self.config_file, 'r') as f:
-                file_config = json.load(f)
-                self.config.update(file_config)
+    def set(self, key: str, value: Any) -> None:
+        """Set a configuration key to a value."""
+        self.settings[key] = value
 
-    def get(self, key):
-        return self.config.get(key, DEFAULT_CONFIG.get(key))
+    def load(self, filepath: str) -> None:
+        """Load configuration from a file."""
+        import json
+        with open(filepath, 'r') as file:
+            self.settings.update(json.load(file))
 
-    def set(self, key, value):
-        self.config[key] = value
-
-    def save(self):
-        with open(self.config_file, 'w') as f:
-            json.dump(self.config, f, indent=4)
+    def save(self, filepath: str) -> None:
+        """Save current configuration to a file."""
+        import json
+        with open(filepath, 'w') as file:
+            json.dump(self.settings, file, indent=4)
