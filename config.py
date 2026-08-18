@@ -1,25 +1,32 @@
-from typing import Dict, Any
+import os
+import json
+
+class ConfigError(Exception):
+    pass
 
 class Config:
-    def __init__(self, settings: Dict[str, Any]) -> None:
-        self.settings = settings
+    def __init__(self, filepath):
+        self.filepath = filepath
+        self.config_data = self.load_config()
 
-    def get(self, key: str, default: Any = None) -> Any:
-        """Retrieve a setting by key, returning a default if not found."""
-        return self.settings.get(key, default)
+    def load_config(self):
+        if not os.path.isfile(self.filepath):
+            raise ConfigError('Config file does not exist.')
+        try:
+            with open(self.filepath, 'r') as config_file:
+                return json.load(config_file)
+        except json.JSONDecodeError:
+            raise ConfigError('Error decoding JSON from config file.')
+        except Exception as e:
+            raise ConfigError(f'Unexpected error: {str(e)}')
 
-    def set(self, key: str, value: Any) -> None:
-        """Set a configuration key to a value."""
-        self.settings[key] = value
+    def get(self, key, default=None):
+        return self.config_data.get(key, default)
 
-    def load(self, filepath: str) -> None:
-        """Load configuration from a file."""
-        import json
-        with open(filepath, 'r') as file:
-            self.settings.update(json.load(file))
-
-    def save(self, filepath: str) -> None:
-        """Save current configuration to a file."""
-        import json
-        with open(filepath, 'w') as file:
-            json.dump(self.settings, file, indent=4)
+    def set(self, key, value):
+        self.config_data[key] = value
+        try:
+            with open(self.filepath, 'w') as config_file:
+                json.dump(self.config_data, config_file, indent=4)
+        except Exception as e:
+            raise ConfigError(f'Failed to write config: {str(e)}')
