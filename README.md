@@ -1,17 +1,18 @@
-# Automation Tool 55
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-Automation Tool 55 is a powerful autoclicker built in Python, designed to enhance productivity by automating repetitive clicking tasks. With customizable settings and user-friendly controls, it simplifies workflows across various applications.
+# automation-tool-55
+
+A Python-based autoclicker designed to handle repetitive mouse clicking tasks efficiently. It offers fine-grained control over automation parameters for both casual and professional use cases.
 
 ## Features
-
-- **Custom Click Intervals**: Define how quickly you want the clicks to occur, ranging from milliseconds to seconds, giving you complete control over your interactions.
-- **Hotkey Activation**: Start and stop the autoclicker with customizable keyboard shortcuts, allowing hands-free operation.
-- **Click Duration Control**: Specify the total time the autoclicker should run, perfect for setting limits on tasks and preventing unintended usage.
-- **Cross-Platform Support**: Compatible with Windows, macOS, and Linux, ensuring that all users can benefit from enhanced automation regardless of their operating system.
+- Millisecond-accurate intervals for click timing
+- Custom hotkeys to start, stop, and adjust settings on the fly
+- Options for different click types including single and double clicks
+- Session duration limits and click count targets
 
 ## Installation
 
-To install Automation Tool 55, ensure you have Python 3.6+ installed, then run the following commands:
+Clone the repository and set up the environment:
 
 ```bash
 git clone https://github.com/Developer/automation-tool-55.git
@@ -19,20 +20,21 @@ cd automation-tool-55
 pip install -r requirements.txt
 ```
 
-## Basic Usage Example
+## Basic Usage
 
-After installation, running the autoclicker is straightforward. Open your terminal, navigate to the project directory, and execute:
+Run the tool via command line with specified parameters:
 
 ```bash
-python autoclicker.py
+python main.py --interval 0.05 --button left --duration 300
 ```
 
-You can now press the designated hotkey to start clicking. Adjust settings by editing the `config.py` file to tailor the clicking behavior to your needs.
+This command sets a 50ms interval between left clicks and runs for 5 minutes.
 
-## License
+To integrate in your own scripts:
 
-![MIT License](https://img.shields.io/badge/license-MIT-blue.svg)
+```python
+from automation_tool_55 import AutoClicker
 
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details. 
-
-For any issues or feature requests, please open an issue in this repository. Happy automating!
+clicker = AutoClicker(interval=0.1, button="left")
+clicker.start()
+```
