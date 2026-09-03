@@ -1,32 +1,28 @@
-import os
 import json
+from pathlib import Path
+from typing import Any, Dict
 
-class ConfigError(Exception):
-    pass
+DEFAULT_CONFIG = {
+    "interval": 0.1,
+    "button": "left",
+    "repeat": 0,
+    "toggle_key": "f6"
+}
 
-class Config:
-    def __init__(self, filepath):
-        self.filepath = filepath
-        self.config_data = self.load_config()
-
-    def load_config(self):
-        if not os.path.isfile(self.filepath):
-            raise ConfigError('Config file does not exist.')
+def load_config(path: str = "config.json") -> Dict[str, Any]:
+    config = DEFAULT_CONFIG.copy()
+    config_path = Path(path)
+    
+    if config_path.exists():
         try:
-            with open(self.filepath, 'r') as config_file:
-                return json.load(config_file)
-        except json.JSONDecodeError:
-            raise ConfigError('Error decoding JSON from config file.')
-        except Exception as e:
-            raise ConfigError(f'Unexpected error: {str(e)}')
+            with open(config_path, "r") as f:
+                user_config = json.load(f)
+                config.update(user_config)
+        except (json.JSONDecodeError, IOError):
+            pass
+            
+    return config
 
-    def get(self, key, default=None):
-        return self.config_data.get(key, default)
-
-    def set(self, key, value):
-        self.config_data[key] = value
-        try:
-            with open(self.filepath, 'w') as config_file:
-                json.dump(self.config_data, config_file, indent=4)
-        except Exception as e:
-            raise ConfigError(f'Failed to write config: {str(e)}')
+def save_config(config: Dict[str, Any], path: str = "config.json") -> None:
+    with open(path, "w") as f:
+        json.dump(config, f, indent=4)
