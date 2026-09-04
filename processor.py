@@ -1,29 +1,28 @@
 import time
-import random
+import pyautogui
+from typing import Tuple
 
-class AutoClicker:
-    def __init__(self, click_interval: float, max_clicks: int):
-        self.click_interval = click_interval
-        self.max_clicks = max_clicks
-        self.click_count = 0
+def get_mouse_position() -> Tuple[int, int]:
+    return pyautogui.position()
 
-    def validate_inputs(self):
-        if not (0 < self.click_interval < 5):
-            raise ValueError('Click interval must be between 0 and 5 seconds.')
-        if not (1 <= self.max_clicks <= 1000):
-            raise ValueError('Max clicks must be between 1 and 1000.')
+def safe_click(x: int, y: int, interval: float = 0.1) -> None:
+    pyautogui.moveTo(x, y)
+    pyautogui.click()
+    time.sleep(interval)
 
-    def run(self):
-        self.validate_inputs()
-        while self.click_count < self.max_clicks:
-            time.sleep(self.click_interval)
-            self.perform_click()
+def perform_drag(start: Tuple[int, int], end: Tuple[int, int], duration: float = 0.5) -> None:
+    pyautogui.moveTo(start[0], start[1])
+    pyautogui.dragTo(end[0], end[1], duration=duration, button='left')
 
-    def perform_click(self):
-        print('Click!')
-        self.click_count += 1
+def type_text(text: str, interval: float = 0.05) -> None:
+    pyautogui.write(text, interval=interval)
 
-# Example usage:
-if __name__ == '__main__':
-    clicker = AutoClicker(click_interval=1, max_clicks=10)
-    clicker.run()
+def perform_double_click(x: int, y: int) -> None:
+    pyautogui.doubleClick(x, y)
+
+def screen_resolution() -> Tuple[int, int]:
+    return pyautogui.size()
+
+def is_on_screen(x: int, y: int) -> bool:
+    width, height = screen_resolution()
+    return 0 <= x <= width and 0 <= y <= height
